@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.center {
+  @apply flex items-center justify-center;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
