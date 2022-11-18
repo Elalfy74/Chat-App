@@ -6,7 +6,7 @@ import cors from "cors";
 import { createServer } from "http";
 
 import authRoutes from "./routes/auth";
-import messageRoutes from "./routes/message";
+import messageRoutes from "./routes/chat";
 
 import io from "./utils/socket";
 import { CustomError } from "./utils/global.types";

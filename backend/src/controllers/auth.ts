@@ -6,8 +6,13 @@ import { CustomError } from "../utils/global.types";
 
 import { SignupBody, LoginBody } from "./auth.types";
 import { isCatchError } from "../utils/catch-error";
+import Chat from "../models/chat";
 
-const signup = async (req: Request, res: Response, next: NextFunction) => {
+export const signup = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { userName, password }: SignupBody = req.body;
 
   try {
@@ -30,17 +35,28 @@ const signup = async (req: Request, res: Response, next: NextFunction) => {
       avatarUrl: "https://www.w3schools.com/howto/img_avatar.png",
     });
 
-    await user.save();
+    const newUser = await user.save();
     const token = user.generateAuth();
 
-    res
-      .status(201)
-      .json({
-        token,
-        userId: user._id.toString(),
-        userName,
-        avatarUrl: user.avatarUrl,
+    // Add the User To The Genral Chat
+    let chat = await Chat.findOne({ global: true });
+
+    if (chat) {
+      chat?.members.push(newUser._id);
+    } else {
+      chat = new Chat({
+        global: true,
+        members: [newUser._id],
       });
+    }
+    await chat!.save();
+
+    res.status(201).json({
+      token,
+      userId: user._id.toString(),
+      userName,
+      avatarUrl: user.avatarUrl,
+    });
   } catch (err) {
     if (isCatchError(err) && !err.statusCode) {
       err.statusCode = 500;
@@ -49,7 +65,11 @@ const signup = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const login = async (req: Request, res: Response, next: NextFunction) => {
+export const login = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { userName, password }: LoginBody = req.body;
 
   try {
@@ -87,5 +107,3 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
     next(err);
   }
 };
-
-export default { signup, login };
