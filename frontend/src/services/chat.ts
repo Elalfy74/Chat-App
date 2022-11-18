@@ -6,13 +6,12 @@ export const getMessages = (token: string) => {
   });
 };
 
-export const sendMessage = ({
-  token,
-  text,
-}: {
+type SendMessageParams = {
   token: string;
   text: string;
-}) => {
+};
+
+export const sendMessage = ({ token, text }: SendMessageParams) => {
   const config = {
     headers: { Authorization: `Bearer ${token}` },
   };

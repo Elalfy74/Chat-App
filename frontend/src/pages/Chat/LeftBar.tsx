@@ -1,12 +1,8 @@
-import { CurrentUserType } from "../../App";
+import { useAuth } from "../../contexts/AuthContext";
 
-const LeftBar = ({
-  currentUser,
-  handleChangeCurrentUser,
-}: {
-  currentUser: CurrentUserType | null;
-  handleChangeCurrentUser: (user: CurrentUserType | null) => void;
-}) => {
+const LeftBar = () => {
+  const { currentUser, handleLogout } = useAuth();
+
   return (
     <div className="border-r w-[250px] px-3 py-4 border-r-gray-500 flex flex-col justify-between">
       <div className="flex items-center gap-2">
@@ -22,7 +18,7 @@ const LeftBar = ({
           <span>My Account</span>
         </div>
       </div>
-      <button className="btn" onClick={() => handleChangeCurrentUser(null)}>
+      <button className="btn" onClick={handleLogout}>
         Logout
       </button>
     </div>

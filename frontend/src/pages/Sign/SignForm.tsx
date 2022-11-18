@@ -4,16 +4,13 @@ import { login, signup } from "../../services/auth";
 import CustomInput from "./CustomInput";
 import { ImSpinner2 } from "react-icons/im";
 import Alert from "./Alert";
-import { CurrentUserType } from "../../App";
+import { useAuth } from "../../contexts/AuthContext";
 
 let firstRender = true;
 
-type SignFormProps = {
-  handleChangeCurrentUser: (user: CurrentUserType | null) => void;
-  loginPage: boolean;
-};
+const SignForm = ({ loginPage }: { loginPage: boolean }) => {
+  const { handleLogin } = useAuth();
 
-const SignForm = ({ loginPage, handleChangeCurrentUser }: SignFormProps) => {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
 
@@ -36,14 +33,9 @@ const SignForm = ({ loginPage, handleChangeCurrentUser }: SignFormProps) => {
   // Set The CurrentUser
   useEffect(() => {
     if (data) {
-      handleChangeCurrentUser({
-        token: data.token,
-        userId: data.userId,
-        userName: data.userName,
-        avatarUrl: data.avatarUrl,
-      });
+      handleLogin(data);
     }
-  }, [data, handleChangeCurrentUser]);
+  }, [data, handleLogin]);
 
   const userNameChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUserName(e.target.value);

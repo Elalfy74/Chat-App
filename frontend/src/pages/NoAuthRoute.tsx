@@ -1,11 +1,9 @@
 import { Navigate, Outlet } from "react-router-dom";
-import { CurrentUserType } from "../App";
+import { useAuth } from "../contexts/AuthContext";
 
-const NoAuthRoute = ({
-  currentUser,
-}: {
-  currentUser: CurrentUserType | null;
-}) => {
+const NoAuthRoute = () => {
+  const { currentUser } = useAuth();
+
   if (!currentUser) return <Outlet />;
 
   return <Navigate to="/" />;

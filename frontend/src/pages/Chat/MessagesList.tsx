@@ -1,15 +1,13 @@
 import { useEffect, useRef } from "react";
-import { CurrentUserType } from "../../App";
 import useHttp from "../../hooks/useHttp";
 import { getMessages } from "../../services/chat";
 import Message from "./Message";
 import openSocket from "socket.io-client";
+import { useAuth } from "../../contexts/AuthContext";
 
-const MessagesList = ({
-  currentUser,
-}: {
-  currentUser: CurrentUserType | null;
-}) => {
+const MessagesList = () => {
+  const { currentUser } = useAuth();
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const { sendRequest, addData, data, loading, error } = useHttp(

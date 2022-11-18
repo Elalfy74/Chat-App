@@ -1,10 +1,12 @@
 import { FormEvent, useState } from "react";
 import { AiOutlineSend } from "react-icons/ai";
-import { CurrentUserType } from "../../App";
+import { useAuth } from "../../contexts/AuthContext";
 import useHttp from "../../hooks/useHttp";
 import { sendMessage } from "../../services/chat";
 
-const ChatForm = ({ currentUser }: { currentUser: CurrentUserType | null }) => {
+const ChatForm = () => {
+  const { currentUser } = useAuth();
+
   const [message, setMessage] = useState("");
   const { sendRequest, data, loading, error } = useHttp(sendMessage, true);
 
@@ -12,6 +14,8 @@ const ChatForm = ({ currentUser }: { currentUser: CurrentUserType | null }) => {
     e.preventDefault();
 
     if (!message) return;
+
+    setMessage("");
 
     sendRequest({
       token: currentUser?.token,
