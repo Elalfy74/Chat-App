@@ -1,20 +1,29 @@
 import { useEffect, useRef } from "react";
-import useHttp from "../../hooks/useHttp";
-import { getMessages } from "../../services/chat";
-import Message from "./Message";
+import { useParams } from "react-router-dom";
 import openSocket from "socket.io-client";
-import { useAuth } from "../../contexts/AuthContext";
 
-const MessagesList = () => {
+import { useAuth } from "../../contexts/AuthContext";
+import useHttp from "../../hooks/useHttp";
+import { getAllMessages } from "../../services/chat";
+import {
+  MessageType,
+  MessageWithSenderType,
+  UserType,
+} from "../../utils/global.type";
+import Message from "./Message";
+
+const MessagesList = ({ otherUser }: { otherUser: UserType }) => {
   const { currentUser } = useAuth();
+  const { chatId } = useParams();
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const { sendRequest, addData, data, loading, error } = useHttp(
-    getMessages,
+    getAllMessages,
     true
   );
 
+  // Scroll To Bottom
   useEffect(() => {
     const scrollToBottom = () => {
       messagesEndRef.current?.scrollIntoView();
@@ -22,28 +31,30 @@ const MessagesList = () => {
     scrollToBottom();
   }, [data]);
 
+  // Get All messages and listen to the new messages
   useEffect(() => {
-    sendRequest(currentUser?.token);
+    sendRequest({ token: currentUser?.token, chatId });
     const socket = openSocket(process.env.REACT_APP_BACKEND_URL!);
 
-    socket.on("messages", (data) => {
+    socket.on(`${chatId}/messages`, (data) => {
       if (data.action === "create") {
-        addData(data.message);
+        addData(data.message, "messages");
       }
     });
     return () => {
       socket.removeAllListeners();
     };
-  }, [currentUser?.token, sendRequest, addData]);
+  }, [currentUser?.token, sendRequest, addData, chatId]);
 
   return (
-    <div className=" bg-base-100 flex flex-col flex-1 gap-4 max-h-[700px] overflow-auto px-2 pb-4 scrollbar-hide border-r-2 border-r-base-300 pt-4  ">
+    <div className=" scrollbar-hide flex max-h-[700px] flex-1 flex-col justify-end gap-4 overflow-auto border-r-2 border-r-base-300 bg-base-100 px-2 pb-4 pt-4  ">
       {data &&
-        data.messages.map((msg: any) => (
+        data.messages.map((msg: MessageWithSenderType | MessageType) => (
           <Message
             key={msg._id}
             msg={msg}
-            fromCurrentUser={msg.sender._id === currentUser?.userId}
+            fromCurrentUser={msg.sender === currentUser?.userId}
+            otherUser={otherUser}
           />
         ))}
       <div ref={messagesEndRef} />

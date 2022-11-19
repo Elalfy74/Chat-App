@@ -1,4 +1,5 @@
 import { useState } from "react";
+
 import Footer from "./Footer";
 import Heading from "./Heading";
 import SignForm from "./SignForm";
@@ -12,7 +13,7 @@ const Sign = () => {
   };
 
   return (
-    <div className="bg-base-200 rounded-lg overflow-hidden pt-6 text-center w-[450px] max-w-[90%]">
+    <div className="w-[450px] max-w-[90%] overflow-hidden rounded-lg bg-base-200 pt-6 text-center">
       <Heading loginPage={loginPage} />
       <SignForm loginPage={loginPage} />
       <Footer loginPage={loginPage} handleChangeSign={handleChangeSign} />

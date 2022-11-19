@@ -1,30 +1,66 @@
-import LeftBar from "./LeftBar/LeftBar";
-import ChatForm from "./ChatForm";
-import MessagesList from "./MessagesList";
+import { useEffect } from "react";
+import { Route, Routes, useParams } from "react-router-dom";
+import openSocket from "socket.io-client";
+
+import { useAuth } from "../../contexts/AuthContext";
+import useHttp from "../../hooks/useHttp";
+import { getAllChats } from "../../services/chat";
+import { ChatType } from "../../utils/global.type";
+import ChatDetails from "./ChatDetails";
+import LeftSideBar from "./LeftSideBar/LeftSideBar";
 
 const Chat = () => {
+  const { currentUser } = useAuth();
+
+  const parmas = useParams();
+  const chatId = parmas["*"];
+
+  const { data, sendRequest, addData } = useHttp(getAllChats, true);
+
+  // Get all Chats and length if there is new Chat
+  useEffect(() => {
+    sendRequest({
+      token: currentUser?.token,
+    });
+
+    const socket = openSocket(process.env.REACT_APP_BACKEND_URL!);
+
+    socket.on(`chat/${currentUser?.userId}`, (data) => {
+      if (data.action === "create") {
+        addData(data.chat, "chats");
+      }
+    });
+
+    return () => {
+      socket.removeAllListeners();
+    };
+  }, [sendRequest, currentUser?.token, addData, currentUser?.userId]);
+
+  let otherUser;
+
+  /* Get the Other User From Chat and pass him to the Chat Details to show his info 
+  in the Messages
+  */
+  if (data && chatId) {
+    otherUser = data.chats.find((chat: ChatType) => chat._id === chatId)
+      .members[0];
+  }
+
   return (
-    <div className="flex rounded-lg bg-base-300 h-[800px] max-h-[80%] w-[1000px] max-w-[95%]">
-      <LeftBar />
-      <div className="flex flex-col flex-1">
-        {/*Heading*/}
-        <div className="flex justify-between px-4 py-4 duration-300 ">
-          <div className="flex items-center flex-1 gap-2">
-            <img
-              src="https://www.w3schools.com/howto/img_avatar.png"
-              alt="avatar"
-              className="w-10 h-10 rounded-full "
-            />
-            <p className="font-normal text-slate-200">Mahmoud ELalfy</p>
-          </div>
-        </div>
-        {/* <div className="py-2">
-          <h2 className="text-2xl font-bold text-center">Chat App</h2>
-          <p className="text-center">12 Members</p> */}
-        {/* </div> */}
-        <MessagesList />
-        <ChatForm />
-      </div>
+    <div className="flex h-[800px] max-h-[80%] w-[1000px] max-w-[95%] rounded-lg bg-base-300">
+      <LeftSideBar chats={data && data.chats} />
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <div className="flex-1 py-2 mt-10 text-center">
+              <h2 className="mb-4 text-2xl font-bold text-center">Chat App</h2>
+              <p className="text-center">Please Select a Chat</p>
+            </div>
+          }
+        ></Route>
+        <Route path=":chatId" element={<ChatDetails otherUser={otherUser} />} />
+      </Routes>
     </div>
   );
 };

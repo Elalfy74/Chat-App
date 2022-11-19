@@ -1,13 +1,16 @@
+import Picker, { EmojiClickData, Theme } from "emoji-picker-react";
 import { FormEvent, useState } from "react";
 import { AiOutlineSend } from "react-icons/ai";
+import { GrEmoji } from "react-icons/gr";
+import { useParams } from "react-router-dom";
+
 import { useAuth } from "../../contexts/AuthContext";
 import useHttp from "../../hooks/useHttp";
 import { sendMessage } from "../../services/chat";
-import Picker, { EmojiClickData, Theme } from "emoji-picker-react";
-import { GrEmoji } from "react-icons/gr";
 
 const ChatForm = () => {
   const { currentUser } = useAuth();
+  const { chatId } = useParams();
 
   const [message, setMessage] = useState("");
   const [showEmojPicker, setShowEmojPicker] = useState(false);
@@ -28,6 +31,7 @@ const ChatForm = () => {
     sendRequest({
       token: currentUser?.token,
       text: message,
+      chatId,
     });
   };
 
@@ -53,10 +57,10 @@ const ChatForm = () => {
           onChange={(e) => setMessage(e.target.value)}
           type="text"
           placeholder="Aa"
-          className="flex-1 input input-bordered bg-base-300"
+          className="flex-1 input-bordered input bg-base-300"
         />
         <button
-          className="btn btn-square"
+          className="btn-square btn"
           disabled={message.length === 0}
           type="submit"
         >

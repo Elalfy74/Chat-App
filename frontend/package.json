@@ -32,6 +32,20 @@
     "extends": [
       "react-app",
       "react-app/jest"
+    ],
+    "overrides": [
+      {
+        "plugins": [
+          "simple-import-sort"
+        ],
+        "files": [
+          "**/*.ts?(x)"
+        ],
+        "rules": {
+          "simple-import-sort/imports": "warn",
+          "simple-import-sort/exports": "warn"
+        }
+      }
     ]
   },
   "browserslist": {
@@ -48,7 +62,10 @@
   },
   "devDependencies": {
     "autoprefixer": "^10.4.13",
+    "eslint-plugin-simple-import-sort": "^8.0.0",
     "postcss": "^8.4.19",
+    "prettier": "^2.7.1",
+    "prettier-plugin-tailwindcss": "^0.1.13",
     "tailwindcss": "^3.2.4"
   }
 }

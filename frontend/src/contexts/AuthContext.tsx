@@ -5,6 +5,7 @@ import React, {
   useEffect,
   useState,
 } from "react";
+
 import { CurrentUserType } from "../utils/global.type";
 
 type AuthContextType = {
@@ -25,6 +26,7 @@ export function useAuth() {
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [currentUser, setCurrentUser] = useState<CurrentUserType | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const savedToken = localStorage.getItem("token");
@@ -40,6 +42,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         avatarUrl: savedAvatarUrl,
       });
     }
+    setLoading(false);
   }, []);
 
   const handleLogin = useCallback((user: CurrentUserType) => {
@@ -66,7 +69,11 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     handleLogout,
   };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={value}>
+      {!loading && children}
+    </AuthContext.Provider>
+  );
 };
 
 export default AuthProvider;
