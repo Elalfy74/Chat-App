@@ -6,7 +6,6 @@ import { CustomError } from "../utils/global.types";
 
 import { SignupBody, LoginBody } from "./auth.types";
 import { isCatchError } from "../utils/catch-error";
-import Chat from "../models/chat";
 
 export const signup = async (
   req: Request,
@@ -35,21 +34,8 @@ export const signup = async (
       avatarUrl: "https://www.w3schools.com/howto/img_avatar.png",
     });
 
-    const newUser = await user.save();
+    await user.save();
     const token = user.generateAuth();
-
-    // Add the User To The Genral Chat
-    let chat = await Chat.findOne({ global: true });
-
-    if (chat) {
-      chat?.members.push(newUser._id);
-    } else {
-      chat = new Chat({
-        global: true,
-        members: [newUser._id],
-      });
-    }
-    await chat!.save();
 
     res.status(201).json({
       token,

@@ -29,7 +29,7 @@ app.use("/chat", messageRoutes);
 
 app.use(
   (error: CustomError, req: Request, res: Response, next: NextFunction) => {
-    console.log(error);
+    // console.log(error);
     const status = error.statusCode || 500;
     const { message, data } = error;
 

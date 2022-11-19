@@ -9,6 +9,7 @@ const userSchema = new Schema<IUser, UserModel, IUserMethods>({
   userName: {
     type: String,
     required: true,
+    unique: true,
   },
   password: {
     type: String,
