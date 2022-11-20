@@ -1,7 +1,7 @@
-const Alert = ({ message }: { message: string }) => {
+const Alert = ({ errorMessage }: { errorMessage: string }) => {
   return (
-    <div className="alert alert-error w-[80%] mx-auto mt-3 rounded-md text-md">
-      <span>{message}</span>
+    <div className="text-md alert alert-error mx-auto mt-3 w-[80%] rounded-md">
+      <span>{errorMessage}</span>
     </div>
   );
 };

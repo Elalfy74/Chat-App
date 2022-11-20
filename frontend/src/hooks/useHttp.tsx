@@ -1,27 +1,9 @@
 import { useCallback, useReducer } from "react";
 
-enum HttpActionKind {
-  SEND,
-  SUCCESSED,
-  FAILED,
-  ADD_DATA,
-  RESET_ERROR,
-}
-
-type HttpAction = {
-  type: HttpActionKind;
-  responseData?: any;
-  error?: any;
-};
-
-type HttpState = {
-  loading: boolean;
-  data: any;
-  error: any;
-};
+import { HttpAction, HttpActionKind, HttpState } from "./useHttp.type";
 
 function httpReducer(state: HttpState, action: HttpAction): HttpState {
-  const { type, responseData, error } = action;
+  const { type, responseData, error, fieldName } = action;
 
   switch (type) {
     case HttpActionKind.SEND:
@@ -46,7 +28,7 @@ function httpReducer(state: HttpState, action: HttpAction): HttpState {
       return {
         data: {
           ...state.data,
-          messages: [...state.data.messages, responseData],
+          [fieldName!]: [...state.data[fieldName!], responseData],
         },
         error: null,
         loading: false,
@@ -73,8 +55,12 @@ const useHttp = (requestFunction: Function, startWithPending = false) => {
     dispatch({ type: HttpActionKind.RESET_ERROR });
   }, []);
 
-  const addData = useCallback((newData: any) => {
-    dispatch({ type: HttpActionKind.ADD_DATA, responseData: newData });
+  const addData = useCallback((newData: any, fieldName: string) => {
+    dispatch({
+      type: HttpActionKind.ADD_DATA,
+      responseData: newData,
+      fieldName,
+    });
   }, []);
 
   const sendRequest = useCallback(

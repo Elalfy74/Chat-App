@@ -1,14 +1,10 @@
 import { useState } from "react";
-import { CurrentUserType } from "../../App";
+
 import Footer from "./Footer";
 import Heading from "./Heading";
 import SignForm from "./SignForm";
 
-type SignProps = {
-  handleChangeCurrentUser: (user: CurrentUserType | null) => void;
-};
-
-const Sign = ({ handleChangeCurrentUser }: SignProps) => {
+const Sign = () => {
   const [loginPage, setLogin] = useState(true);
 
   // Swap Between Login and Signup
@@ -17,12 +13,9 @@ const Sign = ({ handleChangeCurrentUser }: SignProps) => {
   };
 
   return (
-    <div className="bg-base-200 rounded-lg overflow-hidden pt-6 text-center w-[450px] max-w-[90%]">
+    <div className="w-[450px] max-w-[90%] overflow-hidden rounded-lg bg-base-200 pt-6 text-center">
       <Heading loginPage={loginPage} />
-      <SignForm
-        loginPage={loginPage}
-        handleChangeCurrentUser={handleChangeCurrentUser}
-      />
+      <SignForm loginPage={loginPage} />
       <Footer loginPage={loginPage} handleChangeSign={handleChangeSign} />
     </div>
   );

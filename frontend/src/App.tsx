@@ -1,82 +1,31 @@
-import Chat from "./pages/Chat/Chat";
-import Sign from "./pages/Sign/Sign";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import RouteLayout from "./pages/RouteLayout";
-import ProtectedRoute from "./pages/ProtectedRoute";
-import { useCallback, useEffect, useState } from "react";
-import NoAuthRoute from "./pages/NoAuthRoute";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
-export type CurrentUserType = {
-  token: string;
-  userId: string;
-  userName: string;
-  avatarUrl: string;
-};
+import NoAuthRoute from "./components/NoAuthRoute";
+import ProtectedRoute from "./components/ProtectedRoute";
+import RouteLayout from "./components/RouteLayout";
+import AuthProvider from "./contexts/AuthContext";
+import Chat from "./pages/Chat/Chat";
+import NotFound from "./pages/NotFound";
+import Sign from "./pages/Sign/Sign";
 
 function App() {
-  const [currentUser, setCurrentUser] = useState<CurrentUserType | null>(null);
-
-  useEffect(() => {
-    const savedToken = localStorage.getItem("token");
-    const savedUserId = localStorage.getItem("userId");
-    const savedUserName = localStorage.getItem("userName");
-    const savedAvatarUrl = localStorage.getItem("avatarUrl");
-
-    if (savedToken && savedUserName && savedUserId && savedAvatarUrl) {
-      setCurrentUser({
-        token: savedToken,
-        userId: savedUserId,
-        userName: savedUserName,
-        avatarUrl: savedAvatarUrl,
-      });
-    }
-  }, []);
-
-  const handleChangeCurrentUser = useCallback(
-    (user: CurrentUserType | null) => {
-      if (user) {
-        localStorage.setItem("token", user?.token);
-        localStorage.setItem("userId", user?.userId);
-        localStorage.setItem("userName", user?.userName);
-        localStorage.setItem("avatarUrl", user?.avatarUrl);
-      } else {
-        localStorage.removeItem("token");
-        localStorage.removeItem("userId");
-        localStorage.removeItem("userName");
-        localStorage.removeItem("avatarUrl");
-      }
-
-      setCurrentUser(user);
-    },
-    []
-  );
-
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<RouteLayout />}>
-          <Route element={<ProtectedRoute currentUser={currentUser} />}>
-            <Route
-              index
-              element={
-                <Chat
-                  currentUser={currentUser}
-                  handleChangeCurrentUser={handleChangeCurrentUser}
-                />
-              }
-            />
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route element={<RouteLayout />}>
+            <Route path="/" element={<Navigate to="/chat" />} />
+            <Route element={<ProtectedRoute />}>
+              <Route path="/chat/*" element={<Chat />} />
+            </Route>
+            <Route element={<NoAuthRoute />}>
+              <Route path="/login" element={<Sign />} />
+            </Route>
+            <Route path="/*" element={<NotFound />} />
           </Route>
-          <Route element={<NoAuthRoute currentUser={currentUser} />}>
-            <Route
-              path="/login"
-              element={
-                <Sign handleChangeCurrentUser={handleChangeCurrentUser} />
-              }
-            />
-          </Route>
-        </Route>
-      </Routes>
-    </BrowserRouter>
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 

@@ -1,21 +1,22 @@
 import { useEffect, useState } from "react";
+import { ImSpinner2 } from "react-icons/im";
+
+import { useAuth } from "../../contexts/AuthContext";
 import useHttp from "../../hooks/useHttp";
 import { login, signup } from "../../services/auth";
-import CustomInput from "./CustomInput";
-import { ImSpinner2 } from "react-icons/im";
 import Alert from "./Alert";
-import { CurrentUserType } from "../../App";
+import CustomInput from "./CustomInput";
 
 let firstRender = true;
 
-type SignFormProps = {
-  handleChangeCurrentUser: (user: CurrentUserType | null) => void;
-  loginPage: boolean;
-};
+const SignForm = ({ loginPage }: { loginPage: boolean }) => {
+  const { handleLogin } = useAuth();
 
-const SignForm = ({ loginPage, handleChangeCurrentUser }: SignFormProps) => {
   const [userName, setUserName] = useState("");
+  const [userNameTouched, setUserNameTouched] = useState(false);
+
   const [password, setPassword] = useState("");
+  const [passwordTouched, setPasswordTouched] = useState(false);
 
   const requestFunc = loginPage ? login : signup;
 
@@ -36,14 +37,12 @@ const SignForm = ({ loginPage, handleChangeCurrentUser }: SignFormProps) => {
   // Set The CurrentUser
   useEffect(() => {
     if (data) {
-      handleChangeCurrentUser({
-        token: data.token,
-        userId: data.userId,
-        userName: data.userName,
-        avatarUrl: data.avatarUrl,
-      });
+      handleLogin(data);
     }
-  }, [data, handleChangeCurrentUser]);
+  }, [data, handleLogin]);
+
+  const userNameHasError = userName.trim().length < 3 && userNameTouched;
+  const passwordHasError = password.trim().length < 5 && passwordTouched;
 
   const userNameChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUserName(e.target.value);
@@ -54,8 +53,8 @@ const SignForm = ({ loginPage, handleChangeCurrentUser }: SignFormProps) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    //TODO Validation
-    if (!userName || !password) return;
+
+    if (userNameHasError || passwordHasError) return;
 
     await sendRequest({
       userName,
@@ -65,31 +64,29 @@ const SignForm = ({ loginPage, handleChangeCurrentUser }: SignFormProps) => {
 
   return (
     <>
-      {error && <Alert message={error} />}
+      {error && <Alert errorMessage={error} />}
       <form className="px-3 sm:px-8" onSubmit={handleSubmit}>
         <CustomInput
+          autFocus
           label="Username"
           type="text"
           value={userName}
           onChange={userNameChangeHandler}
+          onBlur={() => setUserNameTouched(true)}
+          errorMsg="Username must be at Least 3 Characters"
+          hasError={userNameHasError}
         />
         <CustomInput
           label="Password"
           type="password"
           value={password}
           onChange={passwordChangeHandler}
+          onBlur={() => setPasswordTouched(true)}
+          errorMsg="Password must be at Least 5 Characters"
+          hasError={passwordHasError}
         />
         <div className="flex items-center justify-between my-4">
-          {loginPage && (
-            <a href="#aa" className="text-sm text-gray-200 hover:text-gray-500">
-              Forget Password?
-            </a>
-          )}
-          <button
-            className={`${loginPage ? "" : "mx-auto"}  btn`}
-            type="submit"
-            disabled={loading}
-          >
+          <button className="mx-auto btn" type="submit" disabled={loading}>
             {loading && <ImSpinner2 className="mr-2 animate-spin" />}
             {loginPage ? "Login" : "Signup"}
           </button>
