@@ -4,9 +4,9 @@ import config from "config";
 
 export default admin.initializeApp({
   credential: admin.credential.cert({
-    projectId: config.get("FB_PROJECT_ID"),
-    privateKey: config.get("FB_PRIVATE_KEY"),
-    clientEmail: config.get("FB_CLIENT_EMAIL"),
+    projectId: config.get("projectId"),
+    privateKey: config.get("privateKey"),
+    clientEmail: config.get("clientEmail"),
   }),
   storageBucket: config.get("bucketUrl"),
 });
