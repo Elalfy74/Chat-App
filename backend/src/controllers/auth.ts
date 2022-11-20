@@ -93,3 +93,13 @@ export const login = async (
     next(err);
   }
 };
+
+export const updateUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const file = req.file;
+
+  console.log(file);
+};
