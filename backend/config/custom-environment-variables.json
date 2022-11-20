@@ -1,5 +1,9 @@
 {
   "jsonWebToken":"JSON_WEB_TOKEN",
   "db":"DB",
-  "port":"PORT"
+  "port":"PORT",
+  "bucketUrl":"BUCKET_URL",
+  "projectId":"FB_PROJECT_ID",
+  "privateKey":"FB_PRIVATE_KEY",
+  "clientEmail":"FB_CLIENT_EMAIL"
 }

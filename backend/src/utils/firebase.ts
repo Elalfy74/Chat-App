@@ -1,7 +1,12 @@
-// var admin = require("firebase-admin");
+import admin from "firebase-admin";
 
-// import * as serviceAccount from "../../serviceAccountKey.json";
+import config from "config";
 
-// admin.initializeApp({
-//   credential: admin.credential.cert(serviceAccount),
-// });
+export default admin.initializeApp({
+  credential: admin.credential.cert({
+    projectId: config.get("FB_PROJECT_ID"),
+    privateKey: config.get("FB_PRIVATE_KEY"),
+    clientEmail: config.get("FB_CLIENT_EMAIL"),
+  }),
+  storageBucket: config.get("bucketUrl"),
+});

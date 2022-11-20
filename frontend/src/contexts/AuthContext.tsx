@@ -12,12 +12,14 @@ type AuthContextType = {
   currentUser: CurrentUserType | null;
   handleLogin: (user: CurrentUserType) => void;
   handleLogout: () => void;
+  updateUserData: (field: "avatarUrl" | "userName", value: string) => void;
 };
 
 const AuthContext = createContext<AuthContextType>({
   currentUser: null,
   handleLogin: (user: CurrentUserType) => {},
   handleLogout: () => {},
+  updateUserData: (field, value) => {},
 });
 
 export function useAuth() {
@@ -63,10 +65,27 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setCurrentUser(null);
   }, []);
 
+  const updateUserData = useCallback(
+    (field: "avatarUrl" | "userName", value: string) => {
+      localStorage.setItem(field, value);
+
+      setCurrentUser((oldCurrentUser) => {
+        return (
+          oldCurrentUser && {
+            ...oldCurrentUser,
+            [field]: value,
+          }
+        );
+      });
+    },
+    []
+  );
+
   const value = {
     currentUser,
     handleLogin,
     handleLogout,
+    updateUserData,
   };
 
   return (

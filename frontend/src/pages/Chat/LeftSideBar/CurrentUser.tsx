@@ -25,7 +25,7 @@ const CurrentUser = ({ showModal }: { showModal: () => void }) => {
           <img
             src={currentUser?.avatarUrl}
             alt="avatar"
-            className="w-12 h-12 rounded-full cursor-pointer"
+            className="object-contain w-12 h-12 rounded-full cursor-pointer"
             onClick={showAccountModal}
           />
           <div className="hidden sm:block">

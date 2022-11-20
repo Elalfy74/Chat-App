@@ -36,9 +36,7 @@ app.use(
   }
 );
 
-console.log(config.get("port"));
-
-const port = config.get("port") || 8080;
+const port = config.get("port") || 8000;
 
 connect(db).then((res) => {
   const ioServer = io.init(server);

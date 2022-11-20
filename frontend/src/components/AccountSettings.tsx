@@ -1,16 +1,24 @@
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { ImSpinner2 } from "react-icons/im";
 
 import { useAuth } from "../contexts/AuthContext";
 import useHttp from "../hooks/useHttp";
 import { editAccount } from "../services/auth";
 
 const AccountSettings = ({ hideModal }: { hideModal: () => void }) => {
-  const { currentUser } = useAuth();
+  const { currentUser, updateUserData } = useAuth();
   const [file, setFile] = useState<File | null>(null);
 
   const { data, sendRequest, loading, error } = useHttp(editAccount, false);
 
   const selectedImg = file && URL.createObjectURL(file);
+
+  useEffect(() => {
+    if (data) {
+      updateUserData("avatarUrl", data.newAvatar);
+      hideModal();
+    }
+  }, [data, updateUserData, hideModal]);
 
   const handleImgChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFile(e.target.files![0]);
@@ -31,12 +39,12 @@ const AccountSettings = ({ hideModal }: { hideModal: () => void }) => {
   };
 
   return (
-    <div className="px-10 text-center w-80">
-      <h1 className="mb-10 text-2xl font-bold">My Account</h1>
+    <div className="max-w-full px-6 text-center w-96 md:px-10">
+      <h1 className="mb-8 text-2xl font-bold">My Account</h1>
       <img
         src={selectedImg || currentUser?.avatarUrl}
         alt="user-avatar"
-        className="object-fill w-32 h-32 mx-auto rounded-lg shadow-lg"
+        className="object-contain w-32 h-32 mx-auto rounded-lg shadow-lg"
       />
       <p className="mt-4 text-lg font-semibold">@{currentUser?.userName}</p>
       <form onSubmit={handleSubmit}>
@@ -56,8 +64,12 @@ const AccountSettings = ({ hideModal }: { hideModal: () => void }) => {
           <button className="btn" onClick={hideModal}>
             Cancel
           </button>
-          <button className="btn-primary btn" disabled={!file} type="submit">
-            Save
+          <button
+            className="btn-primary btn"
+            disabled={!file || loading}
+            type="submit"
+          >
+            {loading ? <ImSpinner2 className="mr-2 animate-spin" /> : "Save"}
           </button>
         </div>
       </form>

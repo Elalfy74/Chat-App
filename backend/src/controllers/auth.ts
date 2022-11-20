@@ -7,6 +7,8 @@ import { CustomError } from "../utils/global.types";
 import { SignupBody, LoginBody } from "./auth.types";
 import { isCatchError } from "../utils/catch-error";
 
+import { uploadImg } from "../utils/upload-img";
+
 export const signup = async (
   req: Request,
   res: Response,
@@ -101,5 +103,28 @@ export const updateUser = async (
 ) => {
   const file = req.file;
 
-  console.log(file);
+  const updateInMongo = async (url: any) => {
+    const imgUrl = url[0];
+    console.log(typeof url);
+    console.log(imgUrl);
+    await User.findByIdAndUpdate(req.userId, {
+      avatarUrl: imgUrl,
+    });
+
+    res.status(200).json({
+      message: "Avatar Changed Successfully",
+      newAvatar: imgUrl,
+    });
+  };
+
+  if (file) {
+    try {
+      uploadImg(file, updateInMongo);
+    } catch (err) {
+      if (isCatchError(err) && !err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    }
+  }
 };
