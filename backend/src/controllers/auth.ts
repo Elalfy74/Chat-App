@@ -7,7 +7,11 @@ import { CustomError } from "../utils/global.types";
 import { SignupBody, LoginBody } from "./auth.types";
 import { isCatchError } from "../utils/catch-error";
 
-const signup = async (req: Request, res: Response, next: NextFunction) => {
+export const signup = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { userName, password }: SignupBody = req.body;
 
   try {
@@ -33,14 +37,12 @@ const signup = async (req: Request, res: Response, next: NextFunction) => {
     await user.save();
     const token = user.generateAuth();
 
-    res
-      .status(201)
-      .json({
-        token,
-        userId: user._id.toString(),
-        userName,
-        avatarUrl: user.avatarUrl,
-      });
+    res.status(201).json({
+      token,
+      userId: user._id.toString(),
+      userName,
+      avatarUrl: user.avatarUrl,
+    });
   } catch (err) {
     if (isCatchError(err) && !err.statusCode) {
       err.statusCode = 500;
@@ -49,7 +51,11 @@ const signup = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const login = async (req: Request, res: Response, next: NextFunction) => {
+export const login = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { userName, password }: LoginBody = req.body;
 
   try {
@@ -88,4 +94,12 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export default { signup, login };
+export const updateUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const file = req.file;
+
+  console.log(file);
+};

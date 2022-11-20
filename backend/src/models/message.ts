@@ -2,7 +2,7 @@ import Joi from "joi";
 import { Schema, model } from "mongoose";
 import { CustomError } from "../utils/global.types";
 
-const messageSchema = new Schema(
+export const messageSchema = new Schema(
   {
     text: {
       type: String,
