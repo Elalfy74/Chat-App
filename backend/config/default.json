@@ -1,4 +1,5 @@
 {
   "jsonWebToken":"newVidly",
-  "db":"mongodb://localhost:27017/chat"
+  "db":"mongodb://localhost:27017/chat",
+  "port":8000
 }

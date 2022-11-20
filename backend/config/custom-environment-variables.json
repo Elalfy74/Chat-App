@@ -1,0 +1,5 @@
+{
+  "jsonWebToken":"JSON_WEB_TOKEN",
+  "db":"DB",
+  "port":"PORT"
+}

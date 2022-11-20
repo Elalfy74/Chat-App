@@ -18,7 +18,7 @@ const ChatDetails = ({ otherUser }: { otherUser: UserType | undefined }) => {
           </p>
         </div>
       </div>
-      {otherUser && <MessagesList otherUser={otherUser} />}
+      {<MessagesList otherUser={otherUser} />}
       <ChatForm />
     </div>
   );

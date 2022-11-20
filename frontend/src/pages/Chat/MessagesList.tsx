@@ -5,14 +5,10 @@ import openSocket from "socket.io-client";
 import { useAuth } from "../../contexts/AuthContext";
 import useHttp from "../../hooks/useHttp";
 import { getAllMessages } from "../../services/chat";
-import {
-  MessageType,
-  MessageWithSenderType,
-  UserType,
-} from "../../utils/global.type";
+import { MessageType, UserType } from "../../utils/global.type";
 import Message from "./Message";
 
-const MessagesList = ({ otherUser }: { otherUser: UserType }) => {
+const MessagesList = ({ otherUser }: { otherUser: UserType | undefined }) => {
   const { currentUser } = useAuth();
   const { chatId } = useParams();
 
@@ -48,8 +44,9 @@ const MessagesList = ({ otherUser }: { otherUser: UserType }) => {
 
   return (
     <div className=" scrollbar-hide flex max-h-[700px] flex-1 flex-col justify-end gap-4 overflow-auto border-r-2 border-r-base-300 bg-base-100 px-2 pb-4 pt-4  ">
-      {data &&
-        data.messages.map((msg: MessageWithSenderType | MessageType) => (
+      {otherUser &&
+        data &&
+        data.messages.map((msg: MessageType) => (
           <Message
             key={msg._id}
             msg={msg}

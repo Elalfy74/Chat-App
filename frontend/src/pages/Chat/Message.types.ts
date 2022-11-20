@@ -1,11 +1,7 @@
-import {
-  MessageType,
-  MessageWithSenderType,
-  UserType,
-} from "../../utils/global.type";
+import { MessageType, UserType } from "../../utils/global.type";
 
 export type MessageParams = {
-  msg: MessageWithSenderType | MessageType;
+  msg: MessageType;
   fromCurrentUser: boolean;
   otherUser: UserType;
 };

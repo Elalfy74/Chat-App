@@ -17,10 +17,6 @@ export type MessageType = {
   updatedAt: string;
 };
 
-export type MessageWithSenderType = Omit<MessageType, "sender"> & {
-  sender: UserType;
-};
-
 export type ChatType = {
   _id: string;
   //other Member

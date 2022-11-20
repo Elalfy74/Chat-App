@@ -29,7 +29,6 @@ app.use("/chat", messageRoutes);
 
 app.use(
   (error: CustomError, req: Request, res: Response, next: NextFunction) => {
-    // console.log(error);
     const status = error.statusCode || 500;
     const { message, data } = error;
 
@@ -37,13 +36,17 @@ app.use(
   }
 );
 
+console.log(config.get("port"));
+
+const port = config.get("port") || 8080;
+
 connect(db).then((res) => {
   const ioServer = io.init(server);
 
   ioServer.on("connection", (socket) => {
     console.log("Client connected");
   });
-  server.listen(8080, () => {
-    console.log("Running at localhost:8080");
+  server.listen(port, () => {
+    console.log(`Running at Port ${port}`);
   });
 });
