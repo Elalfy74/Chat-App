@@ -19,4 +19,21 @@ export const signup = async ({ userName, password }: SignParmas) => {
   });
 };
 
+type EditAccountParams = {
+  data: FormData;
+  token: string;
+};
+
+export const editAccount = async ({ data, token }: EditAccountParams) => {
+  const config = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+
+  // return await axios.post(
+  //   `${process.env.REACT_APP_BACKEND_URL!}/auth/update-user`,
+  //   data,
+  //   config
+  // );
+};
+
 export const logout = () => {};
