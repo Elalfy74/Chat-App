@@ -105,8 +105,7 @@ export const updateUser = async (
 
   const updateInMongo = async (url: any) => {
     const imgUrl = url[0];
-    console.log(typeof url);
-    console.log(imgUrl);
+
     await User.findByIdAndUpdate(req.userId, {
       avatarUrl: imgUrl,
     });
@@ -116,15 +115,18 @@ export const updateUser = async (
       newAvatar: imgUrl,
     });
   };
-
-  if (file) {
-    try {
-      uploadImg(file, updateInMongo);
-    } catch (err) {
-      if (isCatchError(err) && !err.statusCode) {
-        err.statusCode = 500;
-      }
-      next(err);
+  try {
+    if (!file) {
+      const error = new Error("No File Provided") as CustomError;
+      error.statusCode = 400;
+      throw error;
     }
+
+    uploadImg(file, updateInMongo);
+  } catch (err) {
+    if (isCatchError(err) && !err.statusCode) {
+      err.statusCode = 500;
+    }
+    next(err);
   }
 };
