@@ -6,6 +6,7 @@ export type GetChatParams = {
 export type GetMessagesParams = {
   token: string;
   chatId: string;
+  pageParam: number | undefined;
 };
 
 export type SendMessageParams = {

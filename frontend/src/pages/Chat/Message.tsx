@@ -3,12 +3,14 @@ import { memo } from "react";
 import { MessageParams } from "./Message.types";
 
 const Message = ({ msg, fromCurrentUser, otherUser }: MessageParams) => {
-  const wrapperClasses = `${fromCurrentUser && "self-end"} flex max-w-md gap-2`;
+  const wrapperClasses = `${
+    fromCurrentUser && "self-end"
+  } flex max-w-[70%] gap-2`;
   const messageClasses = `${
     fromCurrentUser
       ? "rounded-tr-none bg-gray-700"
       : "rounded-tl-none bg-base-200"
-  } px-2 py-2 rounded-lg text-sm`;
+  } px-2 py-2 rounded-lg text-sm break-all`;
 
   return (
     <div className={wrapperClasses}>

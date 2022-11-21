@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../lib/axios";
 
 type SignParmas = {
   userName: string;
@@ -6,14 +6,14 @@ type SignParmas = {
 };
 
 export const login = async ({ userName, password }: SignParmas) => {
-  return await axios.post(`${process.env.REACT_APP_BACKEND_URL!}/auth/login`, {
+  return await axios.post("auth/login", {
     userName,
     password,
   });
 };
 
 export const signup = async ({ userName, password }: SignParmas) => {
-  return await axios.post(`${process.env.REACT_APP_BACKEND_URL!}/auth/signup`, {
+  return await axios.post(`auth/signup`, {
     userName,
     password,
   });
@@ -29,11 +29,7 @@ export const editAccount = async ({ data, token }: EditAccountParams) => {
     headers: { Authorization: `Bearer ${token}` },
   };
 
-  return await axios.patch(
-    `${process.env.REACT_APP_BACKEND_URL!}/auth/update-user`,
-    data,
-    config
-  );
+  return await axios.patch("auth/update-user", data, config);
 };
 
 export const logout = () => {};

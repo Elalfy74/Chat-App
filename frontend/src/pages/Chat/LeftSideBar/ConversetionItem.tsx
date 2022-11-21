@@ -1,3 +1,4 @@
+import moment from "moment";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import openSocket from "socket.io-client";
@@ -13,6 +14,7 @@ const ConversetionItem = ({ chat }: { chat: ChatType }) => {
   const active = chatId === params["*"];
 
   const otherUser = chat.members[0];
+  const creationTime = moment(lastMessage?.createdAt).format("hh:mm A");
 
   // Listening to websocket and update the last message
   useEffect(() => {
@@ -33,20 +35,24 @@ const ConversetionItem = ({ chat }: { chat: ChatType }) => {
       <div
         className={`${
           active && "bg-base-100"
-        } flex cursor-pointer justify-between px-4 py-4 duration-300 hover:bg-base-200`}
+        } flex cursor-pointer justify-between gap-2 px-4 py-4 duration-300 hover:bg-base-200`}
       >
         <div className="flex items-center flex-1 gap-2">
           <img
             src={otherUser.avatarUrl}
             alt="avatar"
-            className="w-10 h-10 rounded-full "
+            className="w-8 h-8 rounded-full sm:h-10 sm:w-10 "
           />
-          <div className="hidden sm:block">
+          <div className="hidden overflow-hidden sm:block">
             <p className="font-normal text-slate-200">{otherUser.userName}</p>
-            {lastMessage && <span className="text-sm">{lastMessage.text}</span>}
+            {lastMessage && (
+              <span className="text-sm ">{lastMessage.text}</span>
+            )}
           </div>
         </div>
-        <p className="hidden text-sm sm:block">12:00 PM</p>
+        {lastMessage && (
+          <p className="hidden text-sm sm:block">{creationTime}</p>
+        )}
       </div>
     </Link>
   );

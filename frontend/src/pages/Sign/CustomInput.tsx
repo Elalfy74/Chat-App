@@ -14,12 +14,15 @@ const CustomInput = (props: CustomInputProps) => {
     props;
   return (
     <div className="form-control ">
-      <label className="label">
-        <span className="label-text">Your {label}</span>
-      </label>
+      <div className="label">
+        <label className="label-text" htmlFor={label}>
+          Your {label}
+        </label>
+      </div>
       <div className="input-group">
         <span>{label}</span>
         <input
+          name={label}
           autoFocus={autFocus}
           type={type}
           className="flex-1 input-bordered input"

@@ -1,11 +1,11 @@
 import { useEffect } from "react";
 import { Route, Routes, useParams } from "react-router-dom";
-import openSocket from "socket.io-client";
 
 import { useAuth } from "../../contexts/AuthContext";
 import useHttp from "../../hooks/useHttp";
 import { getAllChats } from "../../services/chat";
 import { ChatType } from "../../utils/global.type";
+import socket from "../../utils/socket";
 import ChatDetails from "./ChatDetails";
 import LeftSideBar from "./LeftSideBar/LeftSideBar";
 
@@ -23,8 +23,6 @@ const Chat = () => {
       token: currentUser?.token,
     });
 
-    const socket = openSocket(process.env.REACT_APP_BACKEND_URL!);
-
     socket.on(`chat/${currentUser?.userId}`, (data) => {
       if (data.action === "create") {
         addData(data.chat, "chats");
@@ -36,15 +34,16 @@ const Chat = () => {
     };
   }, [sendRequest, currentUser?.token, addData, currentUser?.userId]);
 
-  let otherUser;
+  let otherUserChat;
 
   /* Get the Other User From Chat and pass him to the Chat Details to show his info 
   in the Messages
   */
   if (data && chatId) {
-    otherUser = data.chats.find((chat: ChatType) => chat._id === chatId)
-      .members[0];
+    otherUserChat = data.chats.find((chat: ChatType) => chat._id === chatId);
   }
+
+  const otherUser = otherUserChat && otherUserChat.members[0];
 
   return (
     <div className="flex h-[800px] max-h-[80%] w-[1000px] max-w-[95%] rounded-lg bg-base-300">
