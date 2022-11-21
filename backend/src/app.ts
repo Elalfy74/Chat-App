@@ -4,6 +4,8 @@ import bodyParser from "body-parser";
 import config from "config";
 import cors from "cors";
 import { createServer } from "http";
+import helmet from "helmet";
+import compression from "compression";
 
 import authRoutes from "./routes/auth";
 import messageRoutes from "./routes/chat";
@@ -21,6 +23,8 @@ const app = express();
 const server = createServer(app);
 const db: string = config.get("db");
 
+app.use(helmet());
+app.use(compression());
 app.use(bodyParser.json());
 app.use(cors(corsOption));
 
