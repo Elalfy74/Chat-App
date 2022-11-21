@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { SlLogout } from "react-icons/sl";
 
 import ChatWithUsers from "../../../components/ChatWithUsers";
 import ModalPortal from "../../../components/Modal";
@@ -20,9 +21,10 @@ const LeftSideBar = ({ chats }: { chats: ChatsType }) => {
       )}
       <CurrentUser showModal={() => setShowModal(true)} />
       <ConverstionList chats={chats} />
-      <div className="absolute left-[50%] bottom-4 flex w-full -translate-x-1/2 justify-center pt-3">
-        <button className="btn w-[90%]" onClick={handleLogout}>
-          Logout
+      <div className="absolute left-[50%] bottom-3 flex w-full -translate-x-1/2 justify-center pt-3">
+        <button className="btn w-[80%] sm:w-[90%]" onClick={handleLogout}>
+          <span className="hidden sm:block">Logout</span>
+          <SlLogout className="h-4 w-4 sm:hidden" />
         </button>
       </div>
     </div>

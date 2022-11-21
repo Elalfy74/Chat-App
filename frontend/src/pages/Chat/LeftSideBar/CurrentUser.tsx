@@ -20,12 +20,12 @@ const CurrentUser = ({ showModal }: { showModal: () => void }) => {
           <AccountSettings hideModal={() => setAccountModal(false)} />
         </ModalPortal>
       )}
-      <div className="flex flex-col items-center justify-between gap-1 px-3 py-5 mb-4 border-b border-b-gray-500 sm:flex-row">
+      <div className="mb-4 flex flex-col items-center justify-between gap-1 border-b border-b-gray-500 px-3 py-5 sm:flex-row">
         <div className="flex items-center gap-2">
           <img
             src={currentUser?.avatarUrl}
             alt="avatar"
-            className="object-contain w-12 h-12 rounded-full cursor-pointer"
+            className="h-10 w-10 cursor-pointer rounded-full object-contain sm:h-12 sm:w-12"
             onClick={showAccountModal}
           />
           <div className="hidden sm:block">
@@ -40,7 +40,7 @@ const CurrentUser = ({ showModal }: { showModal: () => void }) => {
 
         <button
           type="button"
-          className="p-2 duration-300 rounded-full hover:bg-base-100"
+          className="rounded-full p-2 duration-300 hover:bg-base-100"
           onClick={showModal}
         >
           <AiOutlinePlus />

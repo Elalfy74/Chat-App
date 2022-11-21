@@ -36,15 +36,15 @@ const ChatForm = () => {
   };
 
   return (
-    <form className="px-3 py-3" onSubmit={handleSubmit}>
+    <form className="px-2 py-3 sm:px-3" onSubmit={handleSubmit}>
       <div className=" input-group">
         <div className="relative">
           <button
             type="button"
-            className="p-2 mr-2 btn"
+            className="btn mr-1 p-2 sm:mr-2"
             onClick={() => setShowEmojPicker(!showEmojPicker)}
           >
-            <GrEmoji className="w-6 h-6" />
+            <GrEmoji className="h-6 w-6" />
           </button>
           {showEmojPicker && (
             <div className="absolute -top-[450px] -left-[175px]">
@@ -57,14 +57,14 @@ const ChatForm = () => {
           onChange={(e) => setMessage(e.target.value)}
           type="text"
           placeholder="Aa"
-          className="flex-1 input-bordered input bg-base-300"
+          className="input-bordered input flex-1 bg-base-300"
         />
         <button
           className="btn-square btn"
           disabled={message.length === 0}
           type="submit"
         >
-          <AiOutlineSend className="w-6 h-6" />
+          <AiOutlineSend className="h-6 w-6" />
         </button>
       </div>
     </form>

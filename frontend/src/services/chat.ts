@@ -17,10 +17,13 @@ export const getChat = ({ token, otherUserName }: GetChatParams) => {
   });
 };
 
-export const getAllMessages = ({ token, chatId }: GetMessagesParams) => {
-  return axios.get(`chat/messages/${chatId}`, {
+export const getAllMessages = async (params: GetMessagesParams) => {
+  const { token, chatId, pageParam = 1 } = params;
+
+  const result = await axios.get(`chat/messages/${chatId}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
+  return result.data.messages;
 };
 
 export const sendMessage = ({ token, text, chatId }: SendMessageParams) => {
